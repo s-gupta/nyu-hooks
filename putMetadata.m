@@ -1,5 +1,5 @@
 function getMetadata(fileName, dt)
-	c = benchmarkPaths(0);
+  c = benchmarkPaths(0);
   fileName = sprintf('%s/metadata/%s.mat', c.benchmarkDataDir, fileName);
   if(~exist(fileName, 'file'))
     save(fileName, '-STRUCT', 'dt');

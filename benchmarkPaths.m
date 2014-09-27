@@ -1,14 +1,14 @@
 function c = benchmarkPaths()
-	c.dataRootDir = fullfile(pwd(), '../eccv14-data');
+  c.dataRootDir = fullfile(pwd(), '../eccv14-data');
   assert(exist(c.dataRootDir, 'dir') > 0, sprintf('%s: data directory does not exist!\n', c.dataRootDir));
 
-		c.benchmarkDataDir = fullfile(c.dataRootDir, 'benchmarkData');
+    c.benchmarkDataDir = fullfile(c.dataRootDir, 'benchmarkData');
     assert(exist(c.benchmarkDataDir, 'dir') > 0, sprintf('%s: benchmark data directory does not exist!\n', c.benchmarkDataDir));
 
-			c.benchmarkGtDir = fullfile(c.benchmarkDataDir, 'groundTruth');
+      c.benchmarkGtDir = fullfile(c.benchmarkDataDir, 'groundTruth');
       assert(exist(c.benchmarkGtDir, 'dir') > 0, sprintf('%s: benchmark data directory does not exist!\n', c.benchmarkGtDir));
 
-			c.gt_box_cache_dir = fullfile(c.benchmarkDataDir, 'gt_box_cache_dir');
+      c.gt_box_cache_dir = fullfile(c.benchmarkDataDir, 'gt_box_cache_dir');
       exists_or_mkdir(c.gt_box_cache_dir);
 
     c.dataDir = fullfile(c.dataRootDir, 'data');

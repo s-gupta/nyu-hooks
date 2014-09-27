@@ -1,5 +1,5 @@
 function rec = getGroundTruthBoxes(imdb, ii)
-	% Load the ground truth segmentation and instances
+  % Load the ground truth segmentation and instances
   try 
     c = benchmarkPaths();
     filename = fullfile_ext(c.gt_box_cache_dir, imdb.image_ids{ii}, 'mat');

@@ -5,6 +5,6 @@ function I = getImage(imName, typ)
 
 % AUTORIGHTS
 
-	paths = benchmarkPaths();
-	I = imread(fullfile(paths.dataDir, typ, strcat(imName, '.png')));
+  paths = benchmarkPaths();
+  I = imread(fullfile(paths.dataDir, typ, strcat(imName, '.png')));
 end
