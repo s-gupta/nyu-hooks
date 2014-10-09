@@ -1,10 +1,7 @@
 function [imName, im] = getImageSet(imSet, fName)
 % function im = getImageSet(imSet, fName)
   if(nargin < 2)
-    fName = 'rmrcsplitsV2';
-    fName = 'rmrcsplits2014';
     fName = 'eccv14-splits';
-    fName = 'xiao';
   end
 
   c = benchmarkPaths();
