@@ -13,7 +13,7 @@ function imdb = imdb_from_nyud2(root_dir, imset, task, regionDir, salt, max_boxe
   imdb.imset = imset;
 
   % Load the class mapping
-  imdb.task = load(fullfile(root_dir, task));
+  imdb.task = getMetadata(task); 
   cls_to_id = containers.Map();
   for i = 1:length(imdb.task.name),
     for j = 1:length(imdb.task.clss{i}),
