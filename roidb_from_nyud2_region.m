@@ -13,11 +13,12 @@ function roidb = roidb_from_nyud2_region(imdb)
     rec = getGroundTruthBoxes(imdb, i); 
 
     % Load the boxes
-    dt = load(fullfile_ext(regionDir, image_ids{i}, 'mat'), 'bboxes');
+    dt = load(fullfile_ext(regionDir, image_ids{i}, 'mat'), 'bboxes', 'superpixels', 'sp2reg');
     dt.bboxes = dt.bboxes(1:min(imdb.max_boxes, size(dt.bboxes,1)), [2 1 4 3]);
+    dt.sp2reg = dt.sp2reg(1:min(imdb.max_boxes, size(dt.bboxes,1)), :);
    
     % Attach the regions
-    rois(i) = attach_proposals(rec, dt.bboxes, cls_to_id, num_classes);
+    rois(i) = attach_proposals_region(rec, dt, cls_to_id, num_classes);
   end
   
   roidb.rois = rois;
