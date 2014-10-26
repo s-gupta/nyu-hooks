@@ -33,6 +33,7 @@ function rec = attach_proposals_region(voc_rec, candidates, class_to_id, num_cla
 
   % Add the ground truth instances to the set of regions
   sp_area = accumarray(candidates.superpixels(:), 1);
+  sp2reg_gt = false(size(inst_mask,3), length(sp_area));
   for i = 1:size(inst_mask,3),
     sp2reg_gt(i,:) = [accumarray(candidates.superpixels(:), linIt(inst_mask(:,:,i))) ./ sp_area]' > 0.5;
   end

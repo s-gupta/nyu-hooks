@@ -9,7 +9,7 @@ function roidb = roidb_from_nyud2_region(imdb, II)
 
   parfor ii = 1:length(II)
     i = II(ii);
-    tic_toc_print('roidb (%s): %d/%d\n', imdb_name, ii, length(II));
+    tic_toc_print('roidb (%s): %d/%d\n', imdb_name, i, length(imdb.image_ids));
     
     % Load the ground truth annotations
     rec = getGroundTruthBoxes(imdb, i); 
