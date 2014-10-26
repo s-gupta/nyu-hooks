@@ -18,35 +18,38 @@ function rec = attach_proposals_region(voc_rec, candidates, class_to_id, num_cla
     gt_classes = zeros(length(voc_rec.objects), 1);
     gt_classes(ind) = gtc;
     num_gt_boxes = size(gt_boxes, 1);
-    inst_mask = false([size(voc_rec.inst) 0]);
+    inst_mask = zeros([size(voc_rec.inst)]);
     for i = 1:length(voc_rec.objects),
-      inst_mask(:,:,i) = voc_rec.inst == voc_rec.objects(i).instanceId;
+      inst_mask(voc_rec.inst == voc_rec.objects(i).instanceId) = i;
     end
   else
     gt_boxes = [];
     gt_classes = [];
     num_gt_boxes = 0;
-    inst_mask = false([size(voc_rec.inst), 0]);
+    inst_mask = zeros([size(voc_rec.inst)]);
   end
   all_boxes = cat(1, gt_boxes, candidates.bboxes);
   num_boxes = size(candidates.bboxes, 1);
 
   % Add the ground truth instances to the set of regions
-  sp_area = accumarray(candidates.superpixels(:), 1);
-  sp2reg_gt = false(size(inst_mask,3), length(sp_area));
-  for i = 1:size(inst_mask,3),
-    sp2reg_gt(i,:) = [accumarray(candidates.superpixels(:), linIt(inst_mask(:,:,i))) ./ sp_area]' > 0.5;
-  end
-  all_sp2reg = cat(1, sp2reg_gt, candidates.sp2reg);
+  n_sp = max(candidates.superpixels(:));
+  sp2reg_gt = accumarray([candidates.superpixels(:), inst_mask(:)+1], 1, [n_sp num_gt_boxes+1])' > 0;
+  
+  % slower code
+  % sp_area = accumarray(candidates.superpixels(:), 1)';
+  % sp2reg_gt_2 = bsxfun(@rdivide, accumarray([candidates.superpixels(:), inst_mask(:)+1], 1, [n_sp num_gt_boxes+1])', sp_area) > 0.5;
+  % assert(isequal(sp2reg_gt, sp2reg_gt_2));
 
-  [iu inter instArea regArea] = computeOverlap(candidates.superpixels, all_sp2reg', inst_mask, 'region');
+  sp2reg_gt = sp2reg_gt(2:end,:);
+  all_sp2reg = cat(1, sp2reg_gt, candidates.sp2reg);
+  [iu, inter, reg_area_1, reg_area_2] = compute_region_overlap(candidates.superpixels, sp2reg_gt, all_sp2reg);
+
   rec.gt = cat(1, true(num_gt_boxes, 1), false(num_boxes, 1));
   rec.overlap = zeros(num_gt_boxes+num_boxes, num_classes, 'single');
   for i = 1:num_gt_boxes
     if(gt_classes(i) > 0)
       rec.overlap(:, gt_classes(i)) = ...
           max(rec.overlap(:, gt_classes(i)), iu(i,:)');
-          % max(rec.overlap(:, gt_classes(i)), boxoverlap(all_boxes, gt_boxes(i, :)));
     end
   end
   rec.boxes = single(all_boxes);
