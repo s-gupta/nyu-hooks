@@ -53,4 +53,5 @@ function rec = attach_proposals_region(voc_rec, candidates, class_to_id, num_cla
   rec.class = uint8(cat(1, gt_classes, zeros(num_boxes, 1)));
   rec.sp = candidates.superpixels;
   rec.sp2reg = all_sp2reg;
+  rec.info = 'overlap is region overlap';
 end
