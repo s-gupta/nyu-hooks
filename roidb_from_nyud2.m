@@ -1,4 +1,5 @@
-function roidb = roidb_from_nyud2(imdb)
+function roidb = roidb_from_nyud2_region(imdb, II)
+  if(~exist('II', 'var')), II = 1:length(imdb.image_ids); end
 
   imdb_name = imdb.name;
   image_ids = imdb.image_ids;
@@ -6,8 +7,9 @@ function roidb = roidb_from_nyud2(imdb)
   num_classes = imdb.num_classes;
   regionDir = imdb.regionDir;
 
-  parfor i = 1:length(image_ids)
-    tic_toc_print('roidb (%s): %d/%d\n', imdb_name, i, length(image_ids));
+  parfor ii = 1:length(II)
+    i = II(ii);
+    tic_toc_print('roidb (%s): %d/%d\n', imdb_name, i, length(imdb.image_ids));
     
     % Load the ground truth annotations
     rec = getGroundTruthBoxes(imdb, i); 
@@ -17,8 +19,11 @@ function roidb = roidb_from_nyud2(imdb)
     dt.bboxes = dt.bboxes(1:min(imdb.max_boxes, size(dt.bboxes,1)), [2 1 4 3]);
    
     % Attach the regions
-    rois(i) = attach_proposals(rec, dt.bboxes, cls_to_id, num_classes);
+    rois(ii) = attach_proposals(rec, dt.bboxes, cls_to_id, num_classes);
   end
-  
-  roidb.rois = rois;
+  roidb.rois(II) = rois;
+  if(length(roidb.rois) < length(imdb.image_ids))
+    roidb.rois(length(imdb.image_ids)+1) = roidb.rois(1);
+    roidb.rois(length(imdb.image_ids)+1) = [];
+  end
 end
