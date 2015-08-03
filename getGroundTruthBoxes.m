@@ -43,6 +43,7 @@ function rec = getGroundTruthBoxes(imdb, ii)
   end
   % put these together in the rec as struct array...
   rec.imgsize = [size(inst,1), size(inst,2)];
+  rec.inst = inst;
 
   save(filename, 'rec');
 end
